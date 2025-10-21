@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package nearby;
+
+option java_package = "com.squarefeets.nearby";
+option java_multiple_files = true;
+option java_outer_classname = "NearbyProto";
+
+import "geodetails.proto";
+
+
+message Nearby {
+    string name = 1;
+    string type = 2; // e.g., SCHOOL, HOSPITAL, MALL, PARK, RESTAURANT, GYM etc
+    geodetails.GeoDetails location = 3;
+    DistanceInfo distance_info = 4;
+    string description = 5; // notes or description about the amenity
+}
+
+
+message DistanceInfo {
+    double walk_km = 1;
+    double drive_km = 2;
+    double cycle_km = 3;
+    double public_transport_km = 4;
+}

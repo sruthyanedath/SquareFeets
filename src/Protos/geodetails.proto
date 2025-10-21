@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package geolocation;
+
+option java_package = "com.squarefeets.geolocation";
+option java_multiple_files = true;
+option java_outer_classname = "GeoLocationsProto";
+
+message GeoLocation {
+    string city = 1;
+    string state = 2;
+    string country = 3;
+    string postal_code = 4;
+    double latitude = 5;
+    double longitude = 6;
+    string landmark = 7;
+    string map_url = 8;
+    string timezone = 9;
+}

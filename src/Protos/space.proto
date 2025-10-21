@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package space;
+
+message Space {
+  string spaceId = 1;
+  string spaceName = 2;
+  string description = 3;
+  string Area = 4;
+  string floorNumber = 5;
+  SpaceType spaceType = 6;
+  repeated string amenities = 7;
+}
+
+enum SpaceType {
+  BEDROOM = 0;
+  BATHROOM = 1;
+  DINING = 2;
+  LIVING = 3;
+  KITCHEN = 4;
+  OFFICE = 5;
+  STORAGE = 6;
+}

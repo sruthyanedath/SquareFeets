@@ -1,0 +1,193 @@
+syntax = "proto3";
+
+package property;
+
+option java_package = "com.squarefeets.property";
+option java_multiple_files = true;
+option java_outer_classname = "PropertyProto";
+
+import "google/protobuf/timestamp.proto";
+
+// --------------------------
+// Main Property Message
+// --------------------------
+message Property {
+    string name = 1;
+    string description = 2;
+    bool noBrokerage = 3;
+    string flooring = 4;
+    Address address = 5;
+    int32 age = 6; // property age in years
+    PropertyType type = 7; // Flat/Independent House/Independent Floor
+    GeoLocation location = 8; // lat/long
+    Purpose purpose = 9; // sale/rent/lease
+    Price expectingPrice = 10; // deposit/rent
+    bool isNegotiable = 11;
+
+    FurnishingCategory furnishingCategory = 12;
+    FurnishingDetails furnishingDetails = 13;
+
+    int32 noOfFloors = 14; // for independent house
+    int32 floorNumber = 15; // for flats, independent floor
+
+    Parking parking = 16;
+    bool hasParking = 17;
+    int32 noOfParkingSlots = 18;
+
+    int32 noOfRooms = 19;
+    int32 noOfAttachedRooms = 20;
+
+    repeated POI pois = 21;
+    Amenities amenities = 22;
+
+    Area totalArea = 23;
+    repeated string images = 24;
+
+    PreferredTenant preferredTenant = 25;
+    string postedBy = 26;
+    google.protobuf.Timestamp postedOn = 27;
+    string contactNumber = 28;
+
+    repeated PropertyEnquiry propertyEnquiries = 29;
+
+    ProjectDetails projectDetails = 30;
+    Reviews reviews = 31;
+    Availability availability = 32;
+}
+
+// --------------------------
+// Nested Messages
+// --------------------------
+message Address {
+    string street = 1;
+    string city = 2;
+    string state = 3;
+    string country = 4;
+    string postalCode = 5;
+}
+
+message GeoLocation {
+    double latitude = 1;
+    double longitude = 2;
+}
+
+message Price {
+    double deposit = 1;
+    double rent = 2;
+}
+
+enum PropertyType {
+    PROPERTY_TYPE_UNSPECIFIED = 0;
+    FLAT = 1;
+    INDEPENDENT_HOUSE = 2;
+    INDEPENDENT_FLOOR = 3;
+    HOSTEL = 4;
+    PG = 5;
+}
+
+enum Purpose {
+    PURPOSE_UNSPECIFIED = 0;
+    SALE = 1;
+    RENT = 2;
+    LEASE = 3;
+}
+
+enum FurnishingCategory {
+    FURNISHING_TYPE_UNSPECIFIED = 0;
+    FULL = 1;
+    SEMI = 2;
+    NONE = 3;
+}
+
+message FurnishingDetails {
+    FurnishingCategory furnishingType = 1;
+    repeated Amenity includedItems = 2;
+}
+
+enum Amenity {
+    AMENITY_UNSPECIFIED = 0;
+    TV = 1;
+    WASHING_MACHINE = 2;
+    REFRIGERATOR = 3;
+    SOFA = 4;
+    DINING_TABLE = 5;
+    WARDROBE = 6;
+    BED = 7;
+    AIR_CONDITIONER = 8;
+    GEYSER = 9;
+    CURTAINS = 10;
+    MICROWAVE = 11;
+    GAS_CONNECTION = 12;
+    WATER_PURIFIER = 13;
+    PRAYER_ROOM_UNIT = 14;
+    OTHER = 15;
+}
+
+message Parking {
+    bool evCharging = 1;
+    string parkingType = 2; // Covered/Open
+    bool car = 3;
+    bool bike = 4;
+}
+
+message POI {
+    string name = 1;
+    string type = 2; // School, Hospital, Mall, etc
+    GeoLocation location = 3;
+    double distanceInKm = 4;
+}
+
+message Amenities {
+    bool electricity = 1;
+    string waterSource = 2; // well/borewell/municipality
+    bool wasteCollection = 3;
+    repeated Amenity complimentaryAmenities = 4; // gym, clubhouse, play area
+    repeated Amenity roomAmenities = 5; // TV, bed, etc
+}
+
+message Area {
+    double superBuiltUp = 1;
+    double carpet = 2;
+    double builtUp = 3;
+}
+
+message PropertyEnquiry {
+    int64 userId = 1;
+    string userName = 2;
+    string contactNumber = 3;
+    bool requestedCallBack = 4;
+    google.protobuf.Timestamp shortlistedAt = 5;
+    string notes = 6;
+
+    // Owner interaction
+    bool viewedByOwner = 7;
+    google.protobuf.Timestamp viewedAt = 8;
+    string ownerResponse = 9;
+    google.protobuf.Timestamp respondedAt = 10;
+    InteractionStatus status = 11;
+}
+
+enum InteractionStatus {
+    INTERACTION_STATUS_UNSPECIFIED = 0;
+    PENDING = 1;
+    VIEWED = 2;
+    RESPONDED = 3;
+    CLOSED = 4;
+}
+
+message ProjectDetails {
+    string builderName = 1;
+    google.protobuf.Timestamp possessionDate = 2;
+    string projectStatus = 3;
+}
+
+message Reviews {
+    double rating = 1; // average rating
+    repeated string comments = 2;
+}
+
+enum Availability {
+    AVAILABILITY_UNSPECIFIED = 0;
+    IMMEDIATE = 1;
+    FUTURE = 2;
+}

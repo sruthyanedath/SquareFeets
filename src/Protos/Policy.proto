@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package property;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "com.squarefeets.policy";
+
+// ---------------- ENUMS ----------------
+
+// Classifies high-level policy category
+enum PolicyType {
+  POLICY_TYPE_UNSPECIFIED = 0;
+  RENTAL = 1;       // e.g., lease, deposit, maintenance, rent increment
+  COMMUNITY = 2;    // e.g., smoking, pets, noise
+  SAFETY = 3;       // e.g., visitor entry, fire safety, CCTV
+  CUSTOM = 4;       // owner-defined rules
+}
+
+// House rule severity level
+enum RuleSeverity {
+  RULE_SEVERITY_UNSPECIFIED = 0;
+  INFO = 1;
+  RESTRICTED = 2;
+  CRITICAL = 3;
+}
+
+// Yes/No/Conditional policy option (to handle filters)
+enum PolicyOption {
+  POLICY_OPTION_UNSPECIFIED = 0;
+  YES = 1;
+  NO = 2;
+  CONDITIONAL = 3; // e.g., pets allowed only for small breeds
+}
+
+// ---------------- MESSAGES ----------------
+
+// House rule message
+message HouseRule {
+  string id = 1;
+  string title = 2;                   // e.g., "No Loud Music After 10 PM"
+  string description = 3;
+  RuleSeverity severity = 4;
+  bool is_active = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+// Rental policy details for filters & validation
+message RentalPolicy {
+  int32 minimum_lease_months = 1;     // e.g., 11 months
+  int32 notice_period_days = 2;       // e.g., 30 days
+  double security_deposit_amount = 3; // e.g., 50000
+  bool maintenance_included = 4;      // true = rent includes maintenance
+  double rent_increment_percent = 5;  // e.g., 5% annual
+}
+
+// Community policy details
+message CommunityPolicy {
+  PolicyOption pets_allowed = 1;      // YES / NO / CONDITIONAL
+  PolicyOption smoking_allowed = 2;
+  PolicyOption alcohol_allowed = 3;
+  PolicyOption bachelors_allowed = 4;
+  PolicyOption families_allowed = 5;
+  PolicyOption visitors_allowed = 6;
+  string visitor_restriction_notes = 7;
+}
+
+// Safety policy details
+message SafetyPolicy {
+  bool cctv_available = 1;
+  bool fire_safety_equipped = 2;
+  bool gated_security = 3;
+  bool emergency_exit = 4;
+  string additional_notes = 5;
+}
+
+// Generic policy wrapper
+message Policy {
+  string id = 1;
+  PolicyType type = 2;
+  string title = 3;
+  string description = 4;
+  repeated HouseRule rules = 5;
+
+  one of policy_detail {
+    RentalPolicy rental_policy = 6;
+    CommunityPolicy community_policy = 7;
+    SafetyPolicy safety_policy = 8;
+  }
+
+  google.protobuf.Timestamp effective_from = 9;
+  google.protobuf.Timestamp effective_to = 10;
+  bool is_mandatory = 11;
+}
+
+
+// Linking policies to a property
+message PropertyPolicy {
+  string property_id = 1;
+  repeated Policy policies = 2;
+}

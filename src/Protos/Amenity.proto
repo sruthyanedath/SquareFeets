@@ -1,0 +1,51 @@
+Message Amenity {
+String AmenityUUid
+String Name
+String Description
+Repeated AmenityTag Tags
+AmenityCategory  amenityCategory // e.g., Furniture, Appliance, Fixture
+AmenityArea  amenityArea // e.g., Bedroom, Bathroom, Living Room
+Boolean  IsComplementary
+Repeated AmenityDetails  details
+String ImageUrls
+String IconUrl
+}
+
+
+
+Message AmenityDetails {
+DetailType  detailType
+String TypeName
+String Value
+}
+
+
+Enum AmenityTag {
+"Luxury"
+"Eco-Friendly"
+"Pet-Friendly"
+"Modern"
+"Essential"
+"Family-Friendly"
+"Smart-Home"
+"Energy-Efficient"
+"Outdoor"
+"Indoor"
+}
+
+Enum DetailType {
+Int,
+Float
+String
+Timestamp
+}
+
+enum AmenityArea {
+  AMENITY_LOCATION_UNSPECIFIED = 0;
+  PROPERTY = 1;   // Common area or whole property (e.g., CCTV, Lift)
+  BEDROOM = 2;    // Amenities specific to bedroom (e.g., Bed, Wardrobe)
+  BATHROOM = 3;   // Bathroom items (e.g., Geyser, Mirror)
+  DINING = 4;     // Dining area items (e.g., Dining Table, Chairs)
+  KITCHEN = 5;    // (optional extension)
+  LIVING_ROOM = 6; // (optional extension)
+}
