@@ -17,42 +17,32 @@ message Property {
     bool noBrokerage = 3;
     string flooring = 4;
     Address address = 5;
-    int32 age = 6; // property age in years
-    PropertyType type = 7; // Flat/Independent House/Independent Floor
-    GeoLocation location = 8; // lat/long
-    Purpose purpose = 9; // sale/rent/lease
-    Price expectingPrice = 10; // deposit/rent
-    bool isNegotiable = 11;
+    int32 age = 6;
+    PropertyType type = 7;
+    GeoLocation location = 8;
+    Price expectingPrice = 9;
+    bool isNegotiable = 10;
 
-    FurnishingCategory furnishingCategory = 12;
-    FurnishingDetails furnishingDetails = 13;
+    FurnishingDetails furnishingDetails = 11;
 
-    int32 noOfFloors = 14; // for independent house
-    int32 floorNumber = 15; // for flats, independent floor
+    int32 floorNumber = 12;
 
-    Parking parking = 16;
-    bool hasParking = 17;
-    int32 noOfParkingSlots = 18;
+    Parking parking = 13;
+    Spaces spaces = 14;
 
-    int32 noOfRooms = 19;
-    int32 noOfAttachedRooms = 20;
+    repeated POI pois = 15;
+    Amenities amenities = 16;
 
-    repeated POI pois = 21;
-    Amenities amenities = 22;
+    Area area = 17;
+    repeated string images = 18;
 
-    Area totalArea = 23;
-    repeated string images = 24;
+    PreferredTenant preferredTenant = 19;
+    ListingInfo listingInfo = 20;
 
-    PreferredTenant preferredTenant = 25;
-    string postedBy = 26;
-    google.protobuf.Timestamp postedOn = 27;
-    string contactNumber = 28;
-
-    repeated PropertyEnquiry propertyEnquiries = 29;
-
-    ProjectDetails projectDetails = 30;
-    Reviews reviews = 31;
-    Availability availability = 32;
+    repeated PropertyEnquiry propertyEnquiries = 21;
+    ProjectDetails projectDetails = 22;
+    Reviews reviews = 23;
+    Availability availability = 24;
 }
 
 // --------------------------
@@ -72,8 +62,18 @@ message GeoLocation {
 }
 
 message Price {
-    double deposit = 1;
-    double rent = 2;
+    enum Type {
+        PRICE_TYPE_UNSPECIFIED = 0;
+        SALE = 1;
+        RENT = 2;
+        LEASE = 3;
+    }
+
+    Type type = 1;
+
+    double sellingPrice = 2;   // meaningful if type = SALE
+    double rentAmount = 3;     // meaningful if type = RENT or LEASE
+    double advanceAmount = 4;  // meaningful if type = RENT or LEASE
 }
 
 enum PropertyType {
@@ -81,15 +81,11 @@ enum PropertyType {
     FLAT = 1;
     INDEPENDENT_HOUSE = 2;
     INDEPENDENT_FLOOR = 3;
-    HOSTEL = 4;
-    PG = 5;
 }
 
-enum Purpose {
-    PURPOSE_UNSPECIFIED = 0;
-    SALE = 1;
-    RENT = 2;
-    LEASE = 3;
+message FurnishingDetails {
+    FurnishingCategory furnishingType = 1;     // FULL / SEMI / NONE
+    repeated Amenity includedItems = 2;        // TV, Bed, Sofa, etc.
 }
 
 enum FurnishingCategory {
@@ -97,11 +93,6 @@ enum FurnishingCategory {
     FULL = 1;
     SEMI = 2;
     NONE = 3;
-}
-
-message FurnishingDetails {
-    FurnishingCategory furnishingType = 1;
-    repeated Amenity includedItems = 2;
 }
 
 enum Amenity {
@@ -124,10 +115,29 @@ enum Amenity {
 }
 
 message Parking {
-    bool evCharging = 1;
-    string parkingType = 2; // Covered/Open
-    bool car = 3;
-    bool bike = 4;
+    bool hasParking = 1;
+    int32 noOfParkingSlots = 2;
+    bool evCharging = 3;
+    string parkingType = 4; // Covered/Open
+}
+
+message Spaces {
+    int32 noOfRooms = 1;
+    int32 noOfAttachedRooms = 2;
+}
+
+message ListingInfo {
+    string postedBy = 1; // owner/broker
+    google.protobuf.Timestamp postedOn = 2;
+    string contactNumber = 3;
+}
+
+enum PreferredTenant {
+    PREFERRED_TENANT_UNSPECIFIED = 0;
+    BACHELORS = 1;
+    LADIES = 2;
+    FAMILY = 3;
+    ANY = 4;
 }
 
 message POI {
@@ -179,6 +189,7 @@ message ProjectDetails {
     string builderName = 1;
     google.protobuf.Timestamp possessionDate = 2;
     string projectStatus = 3;
+    int32 numberOfFloors = 4;
 }
 
 message Reviews {
@@ -186,8 +197,13 @@ message Reviews {
     repeated string comments = 2;
 }
 
-enum Availability {
-    AVAILABILITY_UNSPECIFIED = 0;
-    IMMEDIATE = 1;
-    FUTURE = 2;
+message Availability {
+    enum Type {
+        AVAILABILITY_UNSPECIFIED = 0;
+        IMMEDIATE = 1;
+        FUTURE = 2;
+    }
+
+    Type type = 1;
+    repeated google.protobuf.Timestamp availableDates = 2; // custom dates
 }
